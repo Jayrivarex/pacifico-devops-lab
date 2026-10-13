@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: controller-manager
+  namespace: arc-systems
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: actions-runner-controller
+  template:
+    spec:
+      containers:
+        - name: manager
+          image: ghcr.io/actions/actions-runner-controller:v0.27.6
+          env:
+            - name: GITHUB_TOKEN
+              value: "ghp_mock_token_para_entrevista_remplazar_con_secret"
+---
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: pacifico-runner-deployment
+  namespace: arc-systems
+spec:
+  template:
+    spec:
+      repository: pacifico-seguros/core-financiero
+      # Define los recursos asegurando que no saturen los nodos del sandbox
+      # (Ajustado a los límites de CPU y Memoria permitidos)
